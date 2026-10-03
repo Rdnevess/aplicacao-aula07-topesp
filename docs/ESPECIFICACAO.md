@@ -294,6 +294,8 @@ O projeto fica na raiz do repositório (sem subpasta `ditado/`).
 **Versionado:** código-fonte, `package.json`, `package-lock.json`, `.env.example`, `docker-compose.yml`, `AGENTS.md`, `docs/`, `README.md`.
 **Não versionado (`.gitignore`):** `node_modules/`, `dist/`, `.env`, `logs/`, `.pids/`, `*.log`, `coverage/`, o PDF da aula.
 
+**Fim de linha:** um `.gitattributes` com `* text=auto eol=lf` garante LF em todos os arquivos de texto. Sem isso, o `core.autocrlf` do Git no Windows grava `start.sh` com CRLF, e o Bash falha com `$'\r': command not found`.
+
 ### 9.1 Scripts
 
 - `start.sh`: sobe o banco (`docker compose up -d`), espera o PostgreSQL aceitar conexões, inicia `npm run start:dev` no backend e `npm run dev` no frontend em segundo plano, grava PIDs em `.pids/` e saídas em `logs/backend.log` e `logs/frontend.log`, e imprime os endereços.
@@ -327,7 +329,7 @@ Nos critérios abaixo, `$TOKEN`, `$TOKEN_A`, `$TOKEN_B`, `$ADMIN` são tokens ob
 
 ### Etapa 0 — Artefatos
 
-Entrega: `git init`, `.gitignore`, `docs/ESPECIFICACAO.md`, `AGENTS.md`, `backend/.env.example`.
+Entrega: `git init`, `.gitignore`, `.gitattributes`, `docs/ESPECIFICACAO.md`, `AGENTS.md`, `backend/.env.example`.
 
 - [ ] `git status` limpo após o commit.
 - [ ] `git check-ignore backend/.env` imprime o caminho (está ignorado).
