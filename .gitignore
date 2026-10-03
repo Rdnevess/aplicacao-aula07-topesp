@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+.env
+logs/
+.pids/
+*.log
+*.tsbuildinfo
+entrega.zip
+Aula-07-Aplicacao-Web-Full-Stack.pdf
