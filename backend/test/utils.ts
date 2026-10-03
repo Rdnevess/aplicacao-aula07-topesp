@@ -4,12 +4,20 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { DataSource } from 'typeorm';
+import { vi } from 'vitest';
 import { AppModule } from '../src/app.module.js';
 import { configureApp } from '../src/app.setup.js';
+import { GroqClient } from '../src/transcriptions/groq.client.js';
 import { UsersService } from '../src/users/users.service.js';
 
+/** Substitui a Groq em todos os e2e: nenhum teste chama a API real. */
+export const groqMock = { transcribe: vi.fn<GroqClient['transcribe']>() };
+
 export async function createTestApp(): Promise<INestApplication<App>> {
-  const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
+  const moduleRef = await Test.createTestingModule({ imports: [AppModule] })
+    .overrideProvider(GroqClient)
+    .useValue(groqMock)
+    .compile();
   const app = moduleRef.createNestApplication<INestApplication<App>>();
   configureApp(app);
   await app.init();
@@ -18,7 +26,7 @@ export async function createTestApp(): Promise<INestApplication<App>> {
 
 /** Esvazia as tabelas e recria o admin do seed. */
 export async function resetDatabase(app: INestApplication<App>): Promise<void> {
-  await app.get(DataSource).query('TRUNCATE TABLE "users" CASCADE');
+  await app.get(DataSource).query('TRUNCATE TABLE "transcriptions", "users" CASCADE');
   await app.get(UsersService).ensureAdmin();
 }
 

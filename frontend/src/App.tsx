@@ -5,6 +5,7 @@ import { ProtectedRoute } from './components/routing/ProtectedRoute'
 import { DashboardPage } from './pages/DashboardPage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
+import { TranscriptionPage } from './pages/TranscriptionPage'
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route path="/app" element={<DashboardPage />} />
+          <Route path="/app/transcricoes/:id" element={<TranscriptionPage />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
