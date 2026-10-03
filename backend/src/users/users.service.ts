@@ -1,9 +1,17 @@
-import { ConflictException, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+  OnApplicationBootstrap,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcryptjs';
 import { QueryFailedError, Repository } from 'typeorm';
 import { Role } from '../common/enums/role.enum.js';
+import { UpdateUserDto } from './dto/update-user.dto.js';
 import { User } from './entities/user.entity.js';
 
 const UNIQUE_VIOLATION = '23505';
@@ -60,5 +68,24 @@ export class UsersService implements OnApplicationBootstrap {
       }
       throw error;
     }
+  }
+
+  findAll(): Promise<User[]> {
+    return this.users.find({ order: { createdAt: 'ASC' } });
+  }
+
+  async update(actor: User, id: string, dto: UpdateUserDto): Promise<User> {
+    if (dto.role === undefined && dto.active === undefined) {
+      throw new BadRequestException('Informe role ou active');
+    }
+    // O sistema nunca fica sem administrador: ninguém altera a própria conta por aqui.
+    if (actor.id === id) {
+      throw new BadRequestException('Não é possível alterar a própria conta');
+    }
+    const user = await this.findById(id);
+    if (!user) throw new NotFoundException('Usuário não encontrado');
+    if (dto.role !== undefined) user.role = dto.role;
+    if (dto.active !== undefined) user.active = dto.active;
+    return this.users.save(user);
   }
 }
