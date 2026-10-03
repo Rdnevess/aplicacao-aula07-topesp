@@ -35,7 +35,7 @@ Três camadas e um serviço externo, todos na máquina do desenvolvedor nesta fa
 |---|---|---|---|
 | Interface | React, executado no navegador, servido pelo Vite | 5173 | Telas e coleta do que o usuário informa |
 | API | NestJS | 3000 | Regras, autenticação, acesso ao banco, chamada à Groq |
-| Dados | PostgreSQL 17 em contêiner | 5432 (só `127.0.0.1`) | Usuários e transcrições |
+| Dados | PostgreSQL 17 em contêiner | 5433 no computador → 5432 no contêiner (só `127.0.0.1`) | Usuários e transcrições |
 | Serviço externo | Groq (Whisper) | — | Transcrever o áudio |
 
 Regras de arquitetura:
@@ -194,7 +194,7 @@ Toda consulta de transcrição no serviço filtra por dono na própria consulta:
 ```
 PORT=3000
 DB_HOST=localhost
-DB_PORT=5432
+DB_PORT=5433
 DB_USER=ditado
 DB_PASSWORD=ditado
 DB_NAME=ditado
@@ -209,6 +209,8 @@ ADMIN_PASSWORD=       # mínimo 8 caracteres
 
 Validação na inicialização (class-validator sobre as variáveis): `JWT_SECRET`, `GROQ_API_KEY` e `ADMIN_PASSWORD` obrigatórios e não vazios; `ADMIN_PASSWORD` com 8 caracteres ou mais; portas numéricas. Faltando algo, o backend não sobe e a mensagem nomeia a variável.
 
+**Porta do banco:** a máquina de desenvolvimento já tem um PostgreSQL instalado como serviço do Windows ocupando a 5432 (o caso de `port is already allocated` da seção 4.3 da aula). Em vez de parar esse serviço, o contêiner é publicado na porta **5433** do computador (`127.0.0.1:5433:5432`), e o backend usa `DB_PORT=5433`. Dentro do contêiner o PostgreSQL continua na 5432.
+
 `docker-compose.yml` na raiz (só o banco):
 
 ```yaml
@@ -220,7 +222,7 @@ services:
       POSTGRES_PASSWORD: ditado
       POSTGRES_DB: ditado
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:5433:5432"
     volumes:
       - dados:/var/lib/postgresql/data
 volumes:
@@ -339,7 +341,7 @@ Entrega: `git init`, `.gitignore`, `.gitattributes`, `docs/ESPECIFICACAO.md`, `A
 
 Entrega: `docker-compose.yml`; backend NestJS com config validada, TypeORM e `GET /api/health`; frontend Vite + React + TypeScript + Tailwind v4 com proxy `/api`; `start.sh` e `stop.sh`.
 
-- [ ] `docker compose ps` mostra `127.0.0.1:5432->5432/tcp`.
+- [ ] `docker compose ps` mostra `127.0.0.1:5433->5432/tcp`.
 - [ ] `docker compose exec db psql -U ditado -c "select version();"` imprime `PostgreSQL 17…`.
 - [ ] Backend sem `JWT_SECRET` no `.env` não sobe e a mensagem cita `JWT_SECRET`.
 - [ ] `./start.sh` sobe backend e frontend; `logs/backend.log` e `logs/frontend.log` existem.

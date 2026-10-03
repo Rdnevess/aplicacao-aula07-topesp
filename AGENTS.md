@@ -6,7 +6,7 @@ Contexto para o agente (Claude Code) que trabalha neste repositório. **O que** 
 
 - **Backend** (`backend/`): NestJS 12 (ESM), TypeORM 1.x + PostgreSQL 17, @nestjs/config, @nestjs/jwt + passport-jwt, bcryptjs, class-validator, Vitest + Supertest.
 - **Frontend** (`frontend/`): React 19 + Vite 8 + TypeScript, react-router-dom, axios, TanStack Query, Zustand, react-hook-form + zod, Tailwind CSS v4, lucide-react.
-- **Banco**: `docker-compose.yml` na raiz, só o PostgreSQL, porta publicada em `127.0.0.1:5432`.
+- **Banco**: `docker-compose.yml` na raiz, só o PostgreSQL, porta publicada em `127.0.0.1:5433` (a 5432 do computador já é de um PostgreSQL local).
 - **Serviço externo**: Groq (Whisper), chamado **só pelo backend**.
 
 ## Comandos
@@ -53,6 +53,7 @@ Contexto para o agente (Claude Code) que trabalha neste repositório. **O que** 
 - Ler, imprimir, copiar ou commitar `backend/.env`. A chave da Groq e o `JWT_SECRET` não aparecem em código, log nem mensagem.
 - Mudar o contrato da API em um lado só.
 - Publicar a porta do banco sem `127.0.0.1:` na frente.
+- Mudar a porta do banco de volta para 5432 no computador: ela é de outro PostgreSQL.
 
 ## Ciclo de trabalho
 

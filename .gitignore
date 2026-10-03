@@ -8,3 +8,4 @@ logs/
 *.tsbuildinfo
 entrega.zip
 Aula-07-Aplicacao-Web-Full-Stack.pdf
+.playwright-mcp/
