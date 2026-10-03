@@ -1,19 +1,25 @@
-import { useEffect, useState } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { AppLayout } from './components/layout/AppLayout'
+import { GuestRoute } from './components/routing/GuestRoute'
+import { ProtectedRoute } from './components/routing/ProtectedRoute'
+import { DashboardPage } from './pages/DashboardPage'
+import { LoginPage } from './pages/LoginPage'
+import { RegisterPage } from './pages/RegisterPage'
 
 export default function App() {
-  const [status, setStatus] = useState('verificando…')
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then((res) => res.json())
-      .then((data: { db: string }) => setStatus(`API ok · banco ${data.db}`))
-      .catch(() => setStatus('API fora do ar'))
-  }, [])
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-2 bg-slate-50">
-      <h1 className="text-3xl font-semibold text-indigo-600">Ditado</h1>
-      <p className="text-sm text-slate-600">{status}</p>
-    </main>
+    <Routes>
+      <Route path="/" element={<Navigate to="/app" replace />} />
+      <Route element={<GuestRoute />}>
+        <Route path="/entrar" element={<LoginPage />} />
+        <Route path="/cadastro" element={<RegisterPage />} />
+      </Route>
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AppLayout />}>
+          <Route path="/app" element={<DashboardPage />} />
+        </Route>
+      </Route>
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   )
 }
