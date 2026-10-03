@@ -51,7 +51,7 @@ Regras de arquitetura:
 
 **Backend:** NestJS, @nestjs/config, TypeORM + @nestjs/typeorm + pg, @nestjs/jwt + @nestjs/passport + passport-jwt, bcryptjs, class-validator + class-transformer, multer (via @nestjs/platform-express). Chamada à Groq com `fetch` e `FormData` nativos do Node (sem SDK).
 
-**Testes:** Jest + Supertest (e2e do backend).
+**Testes:** Vitest + Supertest (e2e do backend) — o runner que o scaffold do NestJS 12 já traz. O backend do NestJS 12 é ESM: imports relativos levam a extensão `.js`.
 
 **Ambiente:** Node ≥ 22.12, Docker Compose, Git Bash (para `start.sh`/`stop.sh`) ou PowerShell (dois terminais).
 
@@ -267,7 +267,7 @@ volumes:
 ├── backend/
 │   ├── .env.example
 │   ├── package.json
-│   ├── test/                      ← e2e (Jest + Supertest)
+│   ├── test/                      ← e2e (Vitest + Supertest)
 │   └── src/
 │       ├── main.ts                ← prefixo /api, ValidationPipe global
 │       ├── app.module.ts          ← config validada, TypeORM
@@ -306,7 +306,7 @@ O projeto fica na raiz do repositório (sem subpasta `ditado/`).
 
 ## 10. Testes
 
-- **E2E do backend** (Jest + Supertest) em `backend/test/`, contra o banco `ditado_test` no mesmo contêiner (criado pelo setup de teste se não existir), com `synchronize: true` e limpeza das tabelas entre suítes. O `GroqClient` é substituído por um mock que devolve texto fixo ou lança erro, conforme o caso. Comando: `npm run test:e2e`.
+- **E2E do backend** (Vitest + Supertest) em `backend/test/`, contra o banco `ditado_test` no mesmo contêiner (criado pelo setup de teste se não existir), com `synchronize: true` e limpeza das tabelas entre suítes. O `GroqClient` é substituído por um mock que devolve texto fixo ou lança erro, conforme o caso. Comando: `npm run test:e2e`.
 - **Frontend:** `npm run build` (inclui `tsc`) sem erros.
 - **Verificação manual** roteirizada no navegador, em cada etapa (seção 11).
 - `npm run test:e2e` e o build do frontend passam antes de cada commit a partir da etapa 2.
