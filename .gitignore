@@ -1,11 +1,31 @@
+# Dependências e builds
 node_modules/
 dist/
 coverage/
+*.tsbuildinfo
+
+# Configuração local e segredos (só o .env.example é versionado)
 .env
+.env.*
+!.env.example
+
+# Execução local (start.sh / stop.sh)
 logs/
 .pids/
 *.log
-*.tsbuildinfo
+
+# Entrega e material da aula
 entrega.zip
 Aula-07-Aplicacao-Web-Full-Stack.pdf
+
+# Ferramentas locais
 .playwright-mcp/
+.claude/settings.local.json
+
+# Editores e sistema operacional
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
